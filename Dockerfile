@@ -30,8 +30,8 @@ COPY . .
 # RUN python manage.py collectstatic --noinput
 
 # Expose the port the app runs on
-EXPOSE $PORT
+EXPOSE 8080
 
 # Run the application using Gunicorn
 # Adjust workers based on expected load and available resources
-CMD ["gunicorn", "--bind", "0.0.0.0:$PORT", "--workers", "2", "hf4.wsgi:application"]
+CMD ["gunicorn", "--bind", "0.0.0.0:8080", "--workers", "2", "hf4.wsgi:application"]
