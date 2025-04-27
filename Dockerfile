@@ -2,8 +2,8 @@
 FROM python:3.11-slim
 
 # Set environment variables
-ENV PYTHONDONTWRITEBYTECODE 1
-ENV PYTHONUNBUFFERED 1
+# ENV PYTHONDONTWRITEBYTECODE 1
+# ENV PYTHONUNBUFFERED 1
 
 # Set default media root inside the container
 ENV DJANGO_MEDIA_ROOT=/app/mediafiles
@@ -18,7 +18,12 @@ RUN pip install --no-cache-dir -r requirements.txt
 
 # Run migrations and collect static files
 COPY . .
+
+# Run all migrations one by one in a loop
+RUN python manage.py makemigrations --noinput
 RUN python manage.py migrate --noinput
+RUN python manage.py migrate --noinput --run-syncdb
+
 
 # Expose the port the app runs on
 EXPOSE 8080
