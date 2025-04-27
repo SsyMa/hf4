@@ -4,9 +4,7 @@ FROM python:3.11-slim
 # Set environment variables
 ENV PYTHONDONTWRITEBYTECODE 1
 ENV PYTHONUNBUFFERED 1
-# ENV DJANGO_SETTINGS_MODULE=hf4.settings # Change your_project_name
-# Set default port Gunicorn will listen on (OpenShift often uses 8080)
-ENV PORT=8080
+
 # Set default media root inside the container
 ENV DJANGO_MEDIA_ROOT=/app/mediafiles
 
@@ -18,16 +16,9 @@ WORKDIR /app
 COPY requirements.txt .
 RUN pip install --no-cache-dir -r requirements.txt
 
-# Copy project code
+# Run migrations and collect static files
 COPY . .
-
-# Create directory for media files if it doesn't exist within the image (optional, volume mount is key)
-# RUN mkdir -p $DJANGO_MEDIA_ROOT
-
-# Collect static files
-# STATIC_ROOT is defined in settings.py relative to BASE_DIR, which is /app here
-# Ensure the user running the container has write permissions if needed
-# RUN python manage.py collectstatic --noinput
+RUN python manage.py migrate --noinput
 
 # Expose the port the app runs on
 EXPOSE 8080
