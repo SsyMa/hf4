@@ -25,7 +25,8 @@ if not DEBUG and SECRET_KEY == 'fallback-secret-key-for-local-dev-only-replace-m
     raise ValueError("DJANGO_SECRET_KEY must be set in production environment")
 
 
-ALLOWED_HOSTS = os.environ.get('DJANGO_ALLOWED_HOSTS', '127.0.0.1,localhost').split(',')
+ALLOWED_HOSTS = ['*']
+
 if not ALLOWED_HOSTS:
      ALLOWED_HOSTS = []
 

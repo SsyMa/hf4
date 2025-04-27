@@ -1,1 +1,1 @@
-web: gunicorn hf4.wsgi --log-file -
+web: gunicorn hf4.wsgi --bind 0.0.0.0:$PORT
