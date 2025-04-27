@@ -1,31 +1,10 @@
 <!DOCTYPE html>
-<html>
-
-<body>
-
-    <h1>Pictures</h1>
-
-    <ul>
-        {% for x in pictures %}
-        <li><a href="image/{{ x.id }}">{{ x.name }} {{ x.upload_date }}</a></li>
-        {% endfor %}
-    </ul>
-
-    <a href="/upload_image/" class="btn">Upload Image</a>
-
-
-</body>
-
-</html>
-
-
-<!DOCTYPE html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>All Pictures</title>
-    <style>
-        table {
+    <head>
+        <meta charset="UTF-8">
+        <title>All Pictures</title>
+        <style>
+            table {
             width: 50%;
             border-collapse: collapse;
             margin-top: 20px;
@@ -46,11 +25,13 @@
             font-weight: bold;
             color: black;
         }
-    </style>
+        </style>
 </head>
 <body>
 
     <h1>Pictures</h1>
+    
+    <a href="/upload_image/" class="btn">Upload Image</a>
 
     <table>
         <thead>
@@ -61,12 +42,15 @@
                 <th {% if current_sort == 'upload_date' %}class="sorted"{% endif %}>
                     <a href="/pictures?sort=upload_date">Date</a>
                 </th>
+                <th>
+                    <p>Delete</p>
+                </th>
             </tr>
         </thead>
         <tbody>
             {% for x in pictures %}
             <tr>
-                <td><a href="image/{{ x.id }}">{{ x.name }}</a></td>
+                <td><a href="image/{{ x.id }}" style="color: inherit; text-decoration: none;">{{ x.name }}</a></td>
                 <td>{{ x.upload_date|date:"Y-m-d H:i" }}</td>
                 <td>
                     <form action="/delete_image/{{ x.id }}" method="post" style="display:inline;">
@@ -84,6 +68,8 @@
             {% endfor %}
         </tbody>
     </table>
+
+    <p><a href="/logout/">Logout</a></p>
 
 </body>
 </html>

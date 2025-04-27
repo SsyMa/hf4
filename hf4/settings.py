@@ -126,3 +126,8 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 MEDIA_URL = '/media/'
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
+
+# settings.py
+
+LOGIN_REDIRECT_URL = 'pictures'  # Redirect after successful login
+LOGIN_URL = 'login'           # URL for the login page

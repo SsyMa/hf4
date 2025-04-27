@@ -1,14 +1,18 @@
 <!DOCTYPE html>
 <html>
-
+<head>
+    <title>{{ picture.name }}</title>
+</head>
 <body>
+    <h1>{{ picture.name }}</h1>
+    <p>Uploaded on: {{ picture.upload_date }}</p>
 
-    <h1>{{ mypicture.name }} {{ mypicture.upload_date }}</h1>
+    {% if picture.image %}
+        <img src="{{ picture.image.url }}" alt="{{ picture.name }}" style="max-width: 500px; height: auto;">
+    {% else %}
+        <p>No image available.</p>
+    {% endif %}
 
-    <p>Image: {{ mypicture.image }}</p>
-
-    <p>Back to <a href="/pictures">Pictures</a></p>
-
+    <p><a href="/pictures">Back to all pictures</a></p>
 </body>
-
 </html>

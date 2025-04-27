@@ -1,9 +1,44 @@
 from django.http import HttpResponse
 from django.template import loader
 from .models import Picture
-from django.shortcuts import render, redirect
+from django.shortcuts import render, redirect, get_object_or_404
 from .forms import PictureForm
+from django.contrib.auth.decorators import login_required
+from django.contrib.auth import login, logout, authenticate
+from django.contrib.auth.forms import UserCreationForm, AuthenticationForm
 
+def register(request):
+    if request.method == 'POST':
+        form = UserCreationForm(request.POST)
+        if form.is_valid():
+            user = form.save()
+            login(request, user)
+            return redirect('pictures')
+    else:
+        form = UserCreationForm()
+    return render(request, 'registration/register.html', {'form': form})
+
+def user_login(request):
+    if request.method == 'POST':
+        form = AuthenticationForm(request, data=request.POST)
+        if form.is_valid():
+            username = form.cleaned_data.get('username')
+            password = form.cleaned_data.get('password')
+            user = authenticate(username=username, password=password)
+            if user is not None:
+                login(request, user)
+                return redirect('pictures')
+            else:
+                form.add_error(None, 'Invalid username or password.')
+    else:
+        form = AuthenticationForm()
+    return render(request, 'registration/login.html', {'form': form})
+
+def user_logout(request):
+    logout(request)
+    return redirect('main')
+
+@login_required
 def pictures(request):
     sort_by = request.GET.get('sort', 'name')
 
@@ -14,7 +49,7 @@ def pictures(request):
     else:
         sort_order = sort_by
 
-    pictures = Picture.objects.all().order_by(sort_order)
+    pictures = Picture.objects.filter(owner=request.user).order_by(sort_order)
 
     context = {
         'pictures': pictures,
@@ -26,27 +61,32 @@ def pictures(request):
     return HttpResponse(template.render(context, request))
 
 def image(request, id):
-    mypicture = Picture.objects.get(id=id)
+    picture = Picture.objects.get(id=id)
     template = loader.get_template('image.html')
     context = {
-      'mypicture': mypicture,
+      'picture': picture,
     }
     return HttpResponse(template.render(context, request))
 
 def main(request):
-  template = loader.get_template('main.html')
-  return HttpResponse(template.render())
+  return redirect('/pictures')
 
+@login_required
 def upload_image(request):
     if request.method == 'POST':
         form = PictureForm(request.POST, request.FILES)
         if form.is_valid():
-            form.save()
-            return redirect('/')
+            picture = form.save(commit=False)
+            picture.owner = request.user
+            picture.save()
+            return redirect('pictures')
     else:
         form = PictureForm()
     return render(request, 'upload_image.html', {'form': form})
 
-def delete_image(request):
-    #TODO delete
-    return redirect('/pictures')
+@login_required
+def delete_image(request, id):
+    picture = get_object_or_404(Picture, id=id, owner=request.user)
+    if request.method == 'POST':
+        picture.delete()
+    return redirect('pictures')
