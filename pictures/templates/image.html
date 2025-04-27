@@ -1,18 +1,26 @@
-<!DOCTYPE html>
-<html>
-<head>
-    <title>{{ picture.name }}</title>
-</head>
-<body>
-    <h1>{{ picture.name }}</h1>
-    <p>Uploaded on: {{ picture.upload_date }}</p>
+{% extends 'base.html' %}
 
-    {% if picture.image %}
-        <img src="{{ picture.image.url }}" alt="{{ picture.name }}" style="max-width: 500px; height: auto;">
-    {% else %}
-        <p>No image available.</p>
-    {% endif %}
+{% block title %}{{ picture.name }}{% endblock %}
 
-    <p><a href="/pictures">Back to all pictures</a></p>
-</body>
-</html>
+{% block content %}
+    <div class="container mt-4">
+        <div class="row justify-content-center">
+            <div class="col-md-8">
+                <h1 class="text-center mb-4">{{ picture.name }}</h1>
+                <p class="text-muted text-center mb-3">Uploaded on: {{ picture.upload_date|date:"Y-m-d H:i" }}</p>
+
+                <div class="text-center mb-3">
+                    {% if picture.image %}
+                        <img src="{{ picture.image.url }}" alt="{{ picture.name }}" class="img-fluid rounded" style="max-width: 500px;">
+                    {% else %}
+                        <p class="alert alert-warning">No image available.</p>
+                    {% endif %}
+                </div>
+
+                <div class="text-center">
+                    <a href="/pictures" class="btn btn-secondary">Back to all pictures</a>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}
