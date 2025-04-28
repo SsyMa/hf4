@@ -14,5 +14,4 @@ urlpatterns = [
     path('delete_image/<int:id>', views.delete_image, name='delete_image')
 ]
 
-if settings.DEBUG:
-    urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
+urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
